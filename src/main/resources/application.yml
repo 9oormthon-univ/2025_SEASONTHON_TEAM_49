@@ -10,6 +10,11 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
 
+  datasource:
+    url: jdbc:mysql://mysql_chanme:3306/${MYSQL_DATABASE}?useUnicode=true&characterEncoding=utf8&connectionCollation=utf8mb4_unicode_ci
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
 
 server:
   port: ${PORT:8080}

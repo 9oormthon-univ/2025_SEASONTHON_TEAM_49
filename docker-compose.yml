@@ -14,8 +14,12 @@ services:
       - "3323:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
       - network_chanme
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER}", "-p${MYSQL_PASSWORD}" ]
       interval: 10s
