@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: chanme
+
+  profiles:
+    # 환경변수로 override 가능: SPRING_PROFILES_ACTIVE=prod
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+
+
+# Swagger / OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    # /swagger-ui.html 로도 접근 가능 (리다이렉트)
+    path: /swagger-ui/index.html
+

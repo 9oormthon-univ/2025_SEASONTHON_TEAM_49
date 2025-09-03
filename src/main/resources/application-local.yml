@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    # compose에서 SPRING_DATASOURCE_URL을 주입하면 그 값을 사용.
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3323/${MYSQL_DATABASE:chanme}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8}
+    username: ${SPRING_DATASOURCE_USERNAME:${MYSQL_USER:chanme_user}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${MYSQL_PASSWORD:chanme_password}}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # 로컬은 편의상 자동 스키마 업데이트
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.time_zone: UTC
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
