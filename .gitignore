@@ -1,0 +1,27 @@
+﻿# ===== General =====
+.DS_Store
+*.log
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== Java/Gradle (BE) =====
+BE/build/
+BE/.gradle/
+
+# Wrapper는 반드시 커밋해야 함 (중요!)
+# 따라서 다음 항목들은 '무시하지 않는다'
+# BE/gradlew
+# BE/gradlew.bat
+# BE/gradle/wrapper/
+
+# ===== Docker (BE) =====
+BE/.env
+# compose 파일은 버전에 따라 다르니, 일반적으로 커밋 O
+# BE/docker-compose.yml
+# BE/compose.yml
+
+# ===== Node/Next (FE 예상) =====
+FE/node_modules/
+FE/.next/

@@ -1,0 +1,84 @@
+
+# OS 기본
+
+.DS_Store
+Thumbs.db
+
+
+# Java / Spring Boot
+
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# 빌드 디렉토리
+/build/
+/out/
+/target/
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VSCode
+.vscode/
+
+# Python / FastAPI
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.mypy_cache/
+.venv/
+env/
+venv/
+
+
+# Docker
+
+# 로컬 환경 변수 파일
+.env
+
+# Compose override (개인별 설정)
+docker-compose.override.yml
+
+# Docker 빌드 캐시
+*.pid
+*.seed
+*.pid.lock
+
+
+# MySQL 볼륨 데이터
+mysql_data/
+*.sql
+*.db
+
+# 로그 / Temp
+logs/
+*.out
+*.tmp
+*.bak
+
+
+# 테스트
+
+/src/test/
+/tests/
+.coverage
+.pytest_cache/
+
+
+# 기타
+
+*.swp
+*.swo
