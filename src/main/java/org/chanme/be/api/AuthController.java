@@ -59,4 +59,19 @@ public class AuthController {
         CookieUtils.clearLoginCookie(res);
         return ResponseEntity.ok(Map.of("message", "로그아웃했어요"));
     }
+
+    /** 자동로그인에 사용 */
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(@CookieValue(value = "CHNME_UID", required = false) String memberCode) {
+        if (memberCode == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "로그인이 필요해요"));
+        }
+        var opt = repo.findByMemberCode(memberCode);
+        if (opt.isPresent()) {
+            return ResponseEntity.ok(view(opt.get()));
+        } else {
+            return ResponseEntity.status(404).body(Map.of("error", "회원을 찾을 수 없어요"));
+        }
+    }
 }

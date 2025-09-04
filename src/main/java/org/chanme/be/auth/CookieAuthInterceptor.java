@@ -40,7 +40,6 @@ public class CookieAuthInterceptor implements HandlerInterceptor {
             userOpt.ifPresent(user -> request.setAttribute(REQ_USER_ATTR, user));
         }
 
-        // 다음 단계로 진행
         return true;
     }
 
