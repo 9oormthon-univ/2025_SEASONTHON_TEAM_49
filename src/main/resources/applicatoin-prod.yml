@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    # 운영은 반드시 외부에서 주입! (예: k8s secret / docker env)
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none     # 운영에서는 DDL 자동 변경 금지
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc.time_zone: UTC
+
+server:
+  forward-headers-strategy: framework  # 프록시/로드밸런서 뒤에 있을 때 권장
+  # 운영에서 압축/타임아웃 등 세부 옵션이 필요하면 여기에 추가
+
+logging:
+  level:
+    root: INFO
