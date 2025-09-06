@@ -33,6 +33,10 @@ public class KioskController {
      * 세션이 없으면 새로 생성하고, 있으면 기존 세션에 아이템을 추가합니다.
      * POST /api/cart/items
      */
+
+    /*
+    * Item의 메뉴와 옵션이 모두 같으면 기존 장바구니(세션에 담은거에) 같은거를 +1을 추가한다. 수정 요구사항3
+     */
     @PostMapping("/cart/items")
     public ResponseEntity<String> addItemToCart(
             @RequestBody OrderItemDTO itemDTO,
@@ -91,6 +95,90 @@ public class KioskController {
     }
 
 
+    /**
+     * 장바구니에서 특정 아이템을 삭제합니다. (수정 요구사항1)
+     * DELETE /api/cart/items/{index}
+     *
+     * @param index 장바구니 리스트에서 삭제할 아이템의 순서 (0부터 시작)
+     */
+    @DeleteMapping("/cart/items/{index}")
+    public ResponseEntity<String> removeCartItem(
+            @PathVariable("index") int index,
+            HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("cart") == null) {
+            return ResponseEntity.badRequest().body("장바구니가 비어있습니다.");
+        }
+
+        CartDTO cart = (CartDTO) session.getAttribute("cart");
+        List<OrderItemDTO> items = cart.getItems();
+
+        // index가 유효한 범위 내에 있는지 확인
+        if (index < 0 || index >= items.size()) {
+            return ResponseEntity.badRequest().body("잘못된 아이템 인덱스입니다.");
+        }
+
+        // 해당 인덱스의 아이템을 리스트에서 삭제
+        items.remove(index);
+
+        // 변경된 카트를 다시 세션에 저장
+        session.setAttribute("cart", cart);
+
+        return ResponseEntity.ok("아이템이 장바구니에서 삭제되었습니다.");
+    }
+
+
+    /**
+     * 장바구니 아이템 수량을 1씩 증가시키거나 감소시킵니다. (더 간단한 방식)
+     * POST /api/cart/items/{index}/quantity?action=increase
+     * POST /api/cart/items/{index}/quantity?action=decrease
+     *
+     * @param index 장바구니 리스트에서의 아이템 순서
+     * @param action 'increase' 또는 'decrease' 값을 가짐
+     */
+    @PostMapping("/cart/items/{index}/quantity")
+    public ResponseEntity<String> adjustCartItemQuantity(
+            @PathVariable("index") int index,
+            @RequestParam("action") String action,
+            HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("cart") == null) {
+            return ResponseEntity.badRequest().body("장바구니가 비어있습니다.");
+        }
+
+        CartDTO cart = (CartDTO) session.getAttribute("cart");
+        List<OrderItemDTO> items = cart.getItems();
+
+        if (index < 0 || index >= items.size()) {
+            return ResponseEntity.badRequest().body("잘못된 아이템 인덱스입니다.");
+        }
+
+        OrderItemDTO itemToUpdate = items.get(index);
+        int currentQuantity = itemToUpdate.getQuantity();
+
+        if ("increase".equalsIgnoreCase(action)) {
+            itemToUpdate.setQuantity(currentQuantity + 1);
+        } else if ("decrease".equalsIgnoreCase(action)) {
+            // 수량이 1보다 클 때만 감소시킴
+            if (currentQuantity > 1) {
+                itemToUpdate.setQuantity(currentQuantity - 1);
+            } else {
+                // 수량이 1일 때는 더 이상 줄일 수 없다고 알려주거나, 아무 동작도 하지 않음
+                return ResponseEntity.badRequest().body("수량은 1보다 작을 수 없습니다.");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("잘못된 action 값입니다. 'increase' 또는 'decrease'를 사용하세요.");
+        }
+
+        session.setAttribute("cart", cart);
+
+        return ResponseEntity.ok("수량이 변경되었습니다.");
+    }
+
+
+
 
 
     /**
@@ -133,4 +221,27 @@ public class KioskController {
         List<OptionGroupResponseDTO> options = kioskService.getOptionsByItem(itemId);
         return ResponseEntity.ok(options);
     }
+
+    /**
+     * 현재 세션에 저장된 장바구니의 모든 내용을 조회합니다. (테스트용)
+     * GET /api/cart
+     */
+    @GetMapping("/cart")
+    public ResponseEntity<CartDTO> getCart(HttpServletRequest request) {
+        // 현재 세션을 가져옵니다 (없으면 null 반환).
+        HttpSession session = request.getSession(false);
+
+        // 세션이 없거나 세션에 'cart' 속성이 없으면,
+        // 비어있는 새로운 CartDTO 객체를 반환합니다.
+        if (session == null || session.getAttribute("cart") == null) {
+            return ResponseEntity.ok(new CartDTO()); // { "items": [] } 형태의 비어있는 응답
+        }
+
+        // 세션에서 CartDTO 객체를 가져와서 반환합니다.
+        CartDTO cart = (CartDTO) session.getAttribute("cart");
+        return ResponseEntity.ok(cart);
+    }
+
+
+
 }
