@@ -1,6 +1,7 @@
 package org.chanme.be.util;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.Cookie;
@@ -12,14 +13,23 @@ public final class CookieUtils {
     public static final String LOGIN_COOKIE = "CHNME_UID";
 
     public static void addLoginCookie(HttpServletResponse res, String memberCode) {
-        Cookie c = new Cookie(LOGIN_COOKIE, memberCode);
-        c.setHttpOnly(true);    // JS에서 접근 불가 (보안)
-        c.setPath("/");         // 전체 경로
-        // 개발 중엔 Secure 미설정(HTTP). 운영 HTTPS면 true 권장:
-        // c.setSecure(true);
-        // 유효기간: 30일 (자동로그인)
+//        Cookie c = new Cookie(LOGIN_COOKIE, memberCode);
+//        c.setHttpOnly(true);    // JS에서 접근 불가 (보안)
+//        c.setPath("/");         // 전체 경로
+//        // 개발 중엔 Secure 미설정(HTTP). 운영 HTTPS면 true 권장:
+//        // c.setSecure(true);
+//        // 유효기간: 30일 (자동로그인)
+//        c.setMaxAge(60 * 60 * 24 * 30);
+//        res.addCookie(c);
+
+        String encoded = URLEncoder.encode(memberCode, StandardCharsets.UTF_8);
+        Cookie c = new Cookie(LOGIN_COOKIE, encoded);
+        c.setHttpOnly(true);
+        c.setPath("/");
         c.setMaxAge(60 * 60 * 24 * 30);
         res.addCookie(c);
+
+
     }
 
     public static void clearLoginCookie(HttpServletResponse res) {
