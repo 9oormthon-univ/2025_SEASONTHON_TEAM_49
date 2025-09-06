@@ -1,3 +1,4 @@
+// src/main/java/org/chanme/be/auth/CookieAuthInterceptor.java
 package org.chanme.be.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,9 +31,8 @@ public class CookieAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
-                             Object handler) throws Exception {
+                             Object handler) {
 
-        // 쿠키에서 회원번호 추출
         String memberCode = CookieUtils.resolveMemberCode(request);
 
         if (memberCode != null && !memberCode.isBlank()) {
@@ -43,7 +43,7 @@ public class CookieAuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    /** 편의 메서드: 요청 attribute에서 현재 로그인 사용자 반환 (없으면 null) */
+    /** 요청 attribute에서 현재 로그인 사용자 반환 (없으면 null) */
     public static User currentUser(HttpServletRequest request) {
         Object v = request.getAttribute(REQ_USER_ATTR);
         return (v instanceof User) ? (User) v : null;

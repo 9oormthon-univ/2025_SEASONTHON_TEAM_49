@@ -1,5 +1,8 @@
 package org.chanme.be.util;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +34,12 @@ public final class CookieUtils {
         if (cookies == null) return null;
         for (Cookie c : cookies) {
             if (LOGIN_COOKIE.equals(c.getName())) {
-                return c.getValue();
+                try {
+                    return URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
+                } catch (Exception ignore) {
+                }
+
+                
             }
         }
         return null;

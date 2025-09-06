@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(cookieAuthInterceptor)
-                .addPathPatterns("/**")
+                .addPathPatterns("/api/**")
                 // 여긴 접속 편의 위해 예외 처리(원하면 조정 가능)
                 .excludePathPatterns(
                         "/health",
@@ -25,7 +25,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "/actuator/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/api/auth/signup",
+                        "/api/auth/login"
                 );
     }
 }

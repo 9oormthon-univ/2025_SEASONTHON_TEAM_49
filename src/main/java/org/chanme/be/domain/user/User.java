@@ -35,6 +35,9 @@ public class User {
     @Column(unique = true, nullable = false, length = 64)
     private String memberCode;
 
+    @Column(name= "hap_score")
+    private Integer hapScore;
+
     /** 접근성 설정 (예: 글자 배율) */
     private Integer fontScale;
 }
