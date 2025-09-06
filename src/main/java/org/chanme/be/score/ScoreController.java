@@ -29,6 +29,24 @@ public class ScoreController {
         return ResponseEntity.ok("Timer has started successfully.");
     }
 
+
+    /**
+     * 문제 풀이 타이머를 종료합니다.
+     * 프론트엔드에서는 사용자가 '완료' 버튼을 누르는 순간 이 API를 호출해야 합니다.
+     * 서버는 이 요청을 받은 시간을 세션에 'questionEndTime'으로 기록합니다.
+     */
+    @PostMapping("/end")
+    public ResponseEntity<String> endTimer(HttpServletRequest request) {
+        // 사용자 개인의 세션을 가져오거나 새로 생성합니다.
+        HttpSession session = request.getSession(true);
+        // 현재 시간을 'questionStartTime'으로 세션에 저장합니다.
+        session.setAttribute("questionEndTime", System.currentTimeMillis());
+
+        return ResponseEntity.ok("Timer has en successfully.");
+    }
+
+
+
     /**
      * 정답을 맞힌 후, 점수를 계산하고 DB에 기록하고 결과를 반환한다.
      */
